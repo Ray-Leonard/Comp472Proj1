@@ -41,7 +41,7 @@ x = np.array(folder_list)
 y = np.array(files_num_list)
 
 plt.bar(x, y, color="#602D35", width=0.2)
-plt.savefig('distribution.png', dpi=320)
+plt.savefig('BBC-distribution.pdf', dpi=320)
 plt.show()
 
 
