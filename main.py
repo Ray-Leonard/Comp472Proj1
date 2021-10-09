@@ -44,6 +44,12 @@ plt.bar(x, y, color="#602D35", width=0.2)
 plt.savefig('BBC-distribution.pdf', dpi=320)
 plt.show()
 
+# 3 load files with encoding latin1
+BBC_data_raw = load_files("inputData/BBC/", load_content=True, encoding="latin1")
+# print(BBC_data_raw.target_names)
+# print(BBC_data_raw.data)
+
+# 4 pre-process dataset to have the features ready to be used for NB
 
 # part1 examples of functions
 # data = load_files()
