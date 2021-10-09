@@ -25,6 +25,7 @@ print("Oi boi")
 
 # part1 examples of functions
 # data = load_files()
+# fig.savefig('comparison.png', dpi=200)
 
 # part2 examples of functions
 # df = pd.read_csv('data.csv')
