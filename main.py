@@ -55,7 +55,13 @@ BBC_data_raw = load_files("inputData/BBC/", load_content=True, encoding="latin1"
 # END_TEST
 
 # 4 pre-process dataset to have the features ready to be used for NB
-
+vectorizer = CountVectorizer()
+BBC_data = vectorizer.fit_transform(BBC_data_raw.data)
+# TEST
+# print(len(vectorizer.get_feature_names_out()))
+# print(vectorizer.get_feature_names_out()[26462])
+# print(BBC_data[0])
+# END_TEST
 
 
 # part1 examples of functions
