@@ -49,24 +49,43 @@ BBC_data_raw = load_files("inputData/BBC/", load_content=True, encoding="latin1"
 # TEST
 # print(BBC_data_raw.target_names)
 # print(BBC_data_raw.data)
-# print(BBC_data_raw.target[2003])
-# print(BBC_data_raw.data[2003])
-# print(BBC_data_raw.target_names[2])
 # END_TEST
 
 # 4 pre-process dataset to have the features ready to be used for NB
 vectorizer = CountVectorizer()
-BBC_data = vectorizer.fit_transform(BBC_data_raw.data)
+BBC_data = vectorizer.fit_transform(BBC_data_raw.data).toarray()    # X
 # TEST
-# print(len(vectorizer.get_feature_names_out()))
-# print(vectorizer.get_feature_names_out()[26462])
-# print(BBC_data[0])
+# print(vectorizer.get_feature_names_out())
 # END_TEST
 
+# 5 split
+BBC_classes = BBC_data_raw.target  # y
+BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_split(BBC_data, BBC_classes, random_state=0)
 
-rng = np.random.RandomState(1)
-X = rng.randint(5, size=(6, 100))
-y = np.array([1, 2, 3, 4, 5, 6])
-clf = MultinomialNB()
-clf.fit(X, y)
-print(clf.n_features_in_)
+print(len(BBC_data_test))
+print(len(BBC_data_test))
+print(len(BBC_classes_train))
+print(len(BBC_classes_train))
+
+# 6 - 1st try
+clf_1 = MultinomialNB()
+# train
+clf_1.fit(BBC_data_train, BBC_classes_train)
+# test
+try_1_pred = clf_1.predict(BBC_data_test)
+# print out two result arrays
+# print(try_1_pred)
+# print(BBC_classes_test)
+# confusion matrix
+print(confusion_matrix(BBC_classes_test, try_1_pred))
+# using classification_report:
+# precision
+# recall
+# F1-measure
+
+# rng = np.random.RandomState(1)
+# X = rng.randint(5, size=(6, 100))
+# y = np.array([1, 2, 3, 4, 5, 6])
+# clf = MultinomialNB()
+# clf.fit(X, y)
+# print(clf.n_features_in_)
