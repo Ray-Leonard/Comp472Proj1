@@ -1,7 +1,36 @@
 (a) ---------------- MultinomialNB default values, try 1 ---------------
 (b) The Confusion Matrix
 119	0	2	0	4	
+
 2	101	2	0	2	
+
 2	0	96	0	0	
+
 1	0	0	130	0	
+
 0	1	0	0	95	
+
+(c) Precision, recall, and F1-measure for each class
+               precision    recall  f1-score   support
+
+     business       0.96      0.95      0.96       125
+entertainment       0.99      0.94      0.97       107
+     politics       0.96      0.98      0.97        98
+        sport       1.00      0.99      1.00       131
+         tech       0.94      0.99      0.96        96
+
+     accuracy                           0.97       557
+    macro avg       0.97      0.97      0.97       557
+ weighted avg       0.97      0.97      0.97       557
+
+(d) accuracy, macro-average F1 and weighted-average F1
+accuracy = 0.9712746858168761
+macro F1 = 0.9705326054709549
+weighted F1 = 0.9712951515223888
+
+(e) the prior probability of each class
+business: 0.2244165170556553
+entertainment: 0.19210053859964094
+politics: 0.17594254937163376
+sport: 0.23518850987432674
+tech: 0.17235188509874327

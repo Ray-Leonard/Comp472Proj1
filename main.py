@@ -80,12 +80,26 @@ f.write("(b) The Confusion Matrix\n")
 for i in range(len(confusion_matrix_1)):
     for j in range(len(confusion_matrix_1[0])):
         f.write(str(confusion_matrix_1[i][j]) + '\t')
-    f.write('\n')
-# using classification_report to get precision, recall and F1-measure
-classification_report_1 = classification_report(BBC_classes_test, try_1_pred, target_names=BBC_data_raw.target_names)
-f.write("(c) ")
-print(classification_report_1)
+    f.write('\n\n')
 
+# using classification_report, accuracy_score, and f1_score to get precision, recall and F1-measure
+classification_report_1 = classification_report(BBC_classes_test, try_1_pred, target_names=BBC_data_raw.target_names)
+f.write("(c) Precision, recall, and F1-measure for each class\n")
+f.write(classification_report_1)
+f.write('\n(d) accuracy, macro-average F1 and weighted-average F1\n')
+f.write("accuracy = " + str(accuracy_score(BBC_classes_test, try_1_pred)) + '\n')
+f.write("macro F1 = " + str(f1_score(BBC_classes_test, try_1_pred, average='macro')) + '\n')
+f.write("weighted F1 = " + str(f1_score(BBC_classes_test, try_1_pred, average='weighted')) + '\n')
+
+# prior prob of each class
+f.write("\n(e) the prior probability of each class\n")
+classification_report_1_dict = classification_report(BBC_classes_test, try_1_pred, target_names=BBC_data_raw.target_names, output_dict=True)
+total_1 = classification_report_1_dict['macro avg']['support']
+f.write("business: " + str(classification_report_1_dict['business']['support'] / total_1) + '\n')
+f.write("entertainment: " + str(classification_report_1_dict['entertainment']['support'] / total_1) + '\n')
+f.write("politics: " + str(classification_report_1_dict['politics']['support'] / total_1) + '\n')
+f.write("sport: " + str(classification_report_1_dict['sport']['support'] / total_1) + '\n')
+f.write("tech: " + str(classification_report_1_dict['tech']['support'] / total_1) + '\n')
 
 # remember to close the file!
 f.close()
