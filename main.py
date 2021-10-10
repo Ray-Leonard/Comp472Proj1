@@ -61,7 +61,7 @@ BBC_data = vectorizer.fit_transform(BBC_data_raw.data).toarray()    # X
 
 # 5 split
 BBC_classes = BBC_data_raw.target  # y
-BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_split(BBC_data, BBC_classes, random_state=0)
+BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_split(BBC_data, BBC_classes, random_state=0, train_size=0.8)
 
 
 # generating report
@@ -95,20 +95,25 @@ ans7d = pd.DataFrame({accuracy, macro_f1, weighted_f1}, row_Index_7d)
 f.write(tabulate(ans7d, tablefmt="grid"))
 
 # print(sum(sum(clf_1.feature_count_)))
+# print(len(clf_1.feature_count_[1]))
 # prior prob of each class
 f.write("\n(e) the prior probability of each class\n")
 total_1 = sum(clf_1.class_count_)
+print(total_1)
 row_Index_7e = ["business", "entertainment", "politics", "sport", "tech"]
-business = str(clf_1.class_count_[0] / total_1)
-entertainment = str(clf_1.class_count_[1] / total_1)
-politics = str(clf_1.class_count_[2] / total_1)
-sport = str(clf_1.class_count_[3] / total_1)
-tech = str(clf_1.class_count_[4] / total_1)
-ans7e = pd.DataFrame({business, entertainment, politics, sport, tech}, row_Index_7e)
+business = (clf_1.class_count_[0] / total_1)
+entertainment = (clf_1.class_count_[1] / total_1)
+politics = (clf_1.class_count_[2] / total_1)
+sport = (clf_1.class_count_[3] / total_1)
+tech = (clf_1.class_count_[4] / total_1)
+ans7e = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7e)
 f.write(tabulate(ans7e, tablefmt="grid"))
 
 # vocabulary size
 f.write("\n(f) the size of the vocabulary: " + str(len(vectorizer.get_feature_names_out())))
+
+# number of word-tokens in each class
+f.write("\n(g) number of word-tokens in each class\n")
 
 
 # remember to close the file!
