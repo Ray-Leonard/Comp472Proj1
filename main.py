@@ -87,19 +87,26 @@ classification_report_1 = classification_report(BBC_classes_test, try_1_pred, ta
 f.write("(c) Precision, recall, and F1-measure for each class\n")
 f.write(classification_report_1)
 f.write('\n(d) accuracy, macro-average F1 and weighted-average F1\n')
-f.write("accuracy = " + str(accuracy_score(BBC_classes_test, try_1_pred)) + '\n')
-f.write("macro F1 = " + str(f1_score(BBC_classes_test, try_1_pred, average='macro')) + '\n')
-f.write("weighted F1 = " + str(f1_score(BBC_classes_test, try_1_pred, average='weighted')) + '\n')
+row_Index_7d = ["accuracy", "macro F1", "weighted F1"]
+accuracy = str(accuracy_score(BBC_classes_test, try_1_pred))
+macro_f1 = str(f1_score(BBC_classes_test, try_1_pred, average='macro'))
+weighted_f1 = str(f1_score(BBC_classes_test, try_1_pred, average='weighted'))
+ans7d = pd.DataFrame({accuracy, macro_f1, weighted_f1}, row_Index_7d)
+f.write(tabulate(ans7d, tablefmt="grid"))
 
 # prior prob of each class
 f.write("\n(e) the prior probability of each class\n")
 classification_report_1_dict = classification_report(BBC_classes_test, try_1_pred, target_names=BBC_data_raw.target_names, output_dict=True)
 total_1 = classification_report_1_dict['macro avg']['support']
-f.write("business: " + str(classification_report_1_dict['business']['support'] / total_1) + '\n')
-f.write("entertainment: " + str(classification_report_1_dict['entertainment']['support'] / total_1) + '\n')
-f.write("politics: " + str(classification_report_1_dict['politics']['support'] / total_1) + '\n')
-f.write("sport: " + str(classification_report_1_dict['sport']['support'] / total_1) + '\n')
-f.write("tech: " + str(classification_report_1_dict['tech']['support'] / total_1) + '\n')
+row_Index_7e = ["business", "entertainment", "politics", "sport", "tech"]
+business = str(classification_report_1_dict['business']['support'] / total_1)
+entertainment = str(classification_report_1_dict['entertainment']['support'] / total_1)
+politics = str(classification_report_1_dict['politics']['support'] / total_1)
+sport = str(classification_report_1_dict['sport']['support'] / total_1)
+tech = str(classification_report_1_dict['tech']['support'] / total_1)
+ans7e = pd.DataFrame({business, entertainment, politics, sport, tech}, row_Index_7e)
+f.write(tabulate(ans7e, tablefmt="grid"))
+
 
 # remember to close the file!
 f.close()
