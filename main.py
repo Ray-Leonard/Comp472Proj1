@@ -108,5 +108,7 @@ ans7e = pd.DataFrame({business, entertainment, politics, sport, tech}, row_Index
 f.write(tabulate(ans7e, tablefmt="grid"))
 
 
+# vocabulary size
+f.write("\n(f) the size of the vocabulary: " + str(len(vectorizer.get_feature_names_out())))
 # remember to close the file!
 f.close()
