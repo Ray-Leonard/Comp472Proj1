@@ -64,11 +64,9 @@ BBC_data = vectorizer.fit_transform(BBC_data_raw.data)
 # END_TEST
 
 
-# part1 examples of functions
-# data = load_files()
-# fig.savefig('comparison.png', dpi=200)
-
-# part2 examples of functions
-# df = pd.read_csv('data.csv')
-# pd.get_dummies(df, columns=['name'])
-# pd.Categorical([1, 2, 3, 1, 2, 3])
+rng = np.random.RandomState(1)
+X = rng.randint(5, size=(6, 100))
+y = np.array([1, 2, 3, 4, 5, 6])
+clf = MultinomialNB()
+clf.fit(X, y)
+print(clf.n_features_in_)
