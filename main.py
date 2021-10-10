@@ -94,21 +94,22 @@ weighted_f1 = str(f1_score(BBC_classes_test, try_1_pred, average='weighted'))
 ans7d = pd.DataFrame({accuracy, macro_f1, weighted_f1}, row_Index_7d)
 f.write(tabulate(ans7d, tablefmt="grid"))
 
+# print(sum(sum(clf_1.feature_count_)))
 # prior prob of each class
 f.write("\n(e) the prior probability of each class\n")
-classification_report_1_dict = classification_report(BBC_classes_test, try_1_pred, target_names=BBC_data_raw.target_names, output_dict=True)
-total_1 = classification_report_1_dict['macro avg']['support']
+total_1 = sum(clf_1.class_count_)
 row_Index_7e = ["business", "entertainment", "politics", "sport", "tech"]
-business = str(classification_report_1_dict['business']['support'] / total_1)
-entertainment = str(classification_report_1_dict['entertainment']['support'] / total_1)
-politics = str(classification_report_1_dict['politics']['support'] / total_1)
-sport = str(classification_report_1_dict['sport']['support'] / total_1)
-tech = str(classification_report_1_dict['tech']['support'] / total_1)
+business = str(clf_1.class_count_[0] / total_1)
+entertainment = str(clf_1.class_count_[1] / total_1)
+politics = str(clf_1.class_count_[2] / total_1)
+sport = str(clf_1.class_count_[3] / total_1)
+tech = str(clf_1.class_count_[4] / total_1)
 ans7e = pd.DataFrame({business, entertainment, politics, sport, tech}, row_Index_7e)
 f.write(tabulate(ans7e, tablefmt="grid"))
 
-
 # vocabulary size
 f.write("\n(f) the size of the vocabulary: " + str(len(vectorizer.get_feature_names_out())))
+
+
 # remember to close the file!
 f.close()
