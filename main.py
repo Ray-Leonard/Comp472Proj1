@@ -12,6 +12,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
+from tabulate import tabulate
 
 # mentioned in part2
 import pandas as pd
@@ -77,10 +78,9 @@ try_1_pred = clf_1.predict(BBC_data_test)
 # confusion matrix
 confusion_matrix_1 = confusion_matrix(BBC_classes_test, try_1_pred)
 f.write("(b) The Confusion Matrix\n")
-for i in range(len(confusion_matrix_1)):
-    for j in range(len(confusion_matrix_1[0])):
-        f.write(str(confusion_matrix_1[i][j]) + '\t')
-    f.write('\n\n')
+cm1 = pd.DataFrame(confusion_matrix_1, index=folder_list)
+f.write(tabulate(cm1, folder_list, tablefmt="grid", stralign='center'))
+f.write('\n')
 
 # using classification_report, accuracy_score, and f1_score to get precision, recall and F1-measure
 classification_report_1 = classification_report(BBC_classes_test, try_1_pred, target_names=BBC_data_raw.target_names)
