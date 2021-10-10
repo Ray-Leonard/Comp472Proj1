@@ -62,10 +62,10 @@ BBC_data = vectorizer.fit_transform(BBC_data_raw.data).toarray()    # X
 BBC_classes = BBC_data_raw.target  # y
 BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_split(BBC_data, BBC_classes, random_state=0)
 
-print(len(BBC_data_test))
-print(len(BBC_data_test))
-print(len(BBC_classes_train))
-print(len(BBC_classes_train))
+
+# generating report
+f = open("bbc-performance.txt", 'w')
+f.write("(a) ---------------- MultinomialNB default values, try 1 ---------------\n")
 
 # 6 - 1st try
 clf_1 = MultinomialNB()
@@ -73,19 +73,19 @@ clf_1 = MultinomialNB()
 clf_1.fit(BBC_data_train, BBC_classes_train)
 # test
 try_1_pred = clf_1.predict(BBC_data_test)
-# print out two result arrays
-# print(try_1_pred)
-# print(BBC_classes_test)
-# confusion matrix
-print(confusion_matrix(BBC_classes_test, try_1_pred))
-# using classification_report:
-# precision
-# recall
-# F1-measure
 
-# rng = np.random.RandomState(1)
-# X = rng.randint(5, size=(6, 100))
-# y = np.array([1, 2, 3, 4, 5, 6])
-# clf = MultinomialNB()
-# clf.fit(X, y)
-# print(clf.n_features_in_)
+# confusion matrix
+confusion_matrix_1 = confusion_matrix(BBC_classes_test, try_1_pred)
+f.write("(b) The Confusion Matrix\n")
+for i in range(len(confusion_matrix_1)):
+    for j in range(len(confusion_matrix_1[0])):
+        f.write(str(confusion_matrix_1[i][j]) + '\t')
+    f.write('\n')
+# using classification_report to get precision, recall and F1-measure
+classification_report_1 = classification_report(BBC_classes_test, try_1_pred, target_names=BBC_data_raw.target_names)
+f.write("(c) ")
+print(classification_report_1)
+
+
+# remember to close the file!
+f.close()

@@ -1,0 +1,7 @@
+(a) ---------------- MultinomialNB default values, try 1 ---------------
+(b) The Confusion Matrix
+119	0	2	0	4	
+2	101	2	0	2	
+2	0	96	0	0	
+1	0	0	130	0	
+0	1	0	0	95	
