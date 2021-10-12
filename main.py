@@ -94,12 +94,9 @@ weighted_f1 = str(f1_score(BBC_classes_test, try_1_pred, average='weighted'))
 ans7d = pd.DataFrame({accuracy, macro_f1, weighted_f1}, row_Index_7d)
 f.write(tabulate(ans7d, tablefmt="grid"))
 
-# print(sum(sum(clf_1.feature_count_)))
-# print(len(clf_1.feature_count_[1]))
 # prior prob of each class
 f.write("\n(e) the prior probability of each class\n")
 total_1 = sum(clf_1.class_count_)
-print(total_1)
 row_Index_7e = ["business", "entertainment", "politics", "sport", "tech"]
 business = (clf_1.class_count_[0] / total_1)
 entertainment = (clf_1.class_count_[1] / total_1)
@@ -110,11 +107,19 @@ ans7e = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index
 f.write(tabulate(ans7e, tablefmt="grid"))
 
 # vocabulary size
-f.write("\n(f) the size of the vocabulary: " + str(len(vectorizer.get_feature_names_out())))
+f.write("\n(f) the size of the vocabulary: " + str(len(clf_1.feature_count_[0])))
 
 # number of word-tokens in each class
 f.write("\n(g) number of word-tokens in each class\n")
+row_Index_7g = row_Index_7e
+business = sum(clf_1.feature_count_[0])
+entertainment = sum(clf_1.feature_count_[1])
+politics = sum(clf_1.feature_count_[2])
+sport = sum(clf_1.feature_count_[3])
+tech = sum(clf_1.feature_count_[4])
+ans7g = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7g)
+f.write(tabulate(ans7g, tablefmt='grid'))
 
-
+f.write('\n(h) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_1.feature_count_))) + '\n')
 # remember to close the file!
 f.close()
