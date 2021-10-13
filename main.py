@@ -91,7 +91,7 @@ row_Index_7d = ["accuracy", "macro F1", "weighted F1"]
 accuracy = str(accuracy_score(BBC_classes_test, try_1_pred))
 macro_f1 = str(f1_score(BBC_classes_test, try_1_pred, average='macro'))
 weighted_f1 = str(f1_score(BBC_classes_test, try_1_pred, average='weighted'))
-ans7d = pd.DataFrame({accuracy, macro_f1, weighted_f1}, row_Index_7d)
+ans7d = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index_7d)
 f.write(tabulate(ans7d, tablefmt="grid"))
 
 # prior prob of each class
@@ -121,5 +121,33 @@ ans7g = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index
 f.write(tabulate(ans7g, tablefmt='grid'))
 
 f.write('\n(h) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_1.feature_count_))) + '\n')
+
+f.write('\n(i) the number and percentage of words with a frequency of zero in each class\n')
+percentage_0 = []
+number_0 = []
+for i in range(len(clf_1.feature_count_)):
+    n = 0
+    for j in range(len(clf_1.feature_count_[i])):
+        if clf_1.feature_count_[i][j] == 0:
+            n += 1
+    number_0.append(n)
+    percentage_0.append(n / len(clf_1.feature_count_[i]))
+# please help me do the formatting and write to file
+print(percentage_0)
+print(number_0)
+
+f.write('\n(j) the number and percentage of words with a frequency of one in the entire corpus\n')
+number_1 = 0
+for i in range(len(clf_1.feature_count_[0])):
+    count = 0
+    for j in range(len(clf_1.feature_count_)):
+        count += clf_1.feature_count_[j][i]
+    if count == 1:
+        number_1 += 1
+percentage_1 = number_1 / len(clf_1.feature_count_[0])
+print(percentage_1)
+print(number_1)
+
+
 # remember to close the file!
 f.close()
