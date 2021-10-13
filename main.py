@@ -143,15 +143,17 @@ for i in range(len(clf_1.feature_count_[0])):
     if count == 1:
         number_1 += 1
 percentage_1 = number_1 / len(clf_1.feature_count_[0])
-print(percentage_1)
-print(number_1)
+f.write("percentage: " + str(percentage_1) + '\n')
+f.write("count: " + str(number_1) + '\n')
 
 # two favorite words and their log-prob
 vocabulary_list = vectorizer.get_feature_names_out()
 favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
 favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
 print(clf_1.feature_log_prob_)
-print(clf_1.class_log_prior_)
+f.write("\n(k) 2 favorite words and their log-prob\n")
+f.write("potato: " + '\n')
+f.write('find: ' + "\n")
 
 # remember to close the file!
 f.close()
