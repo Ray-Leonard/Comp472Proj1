@@ -55,9 +55,7 @@ BBC_data_raw = load_files("inputData/BBC/", load_content=True, encoding="latin1"
 # 4 pre-process dataset to have the features ready to be used for NB
 vectorizer = CountVectorizer()
 BBC_data = vectorizer.fit_transform(BBC_data_raw.data).toarray()    # X
-# TEST
-# print(vectorizer.get_feature_names_out())
-# END_TEST
+
 
 # 5 split
 BBC_classes = BBC_data_raw.target  # y
@@ -148,6 +146,12 @@ percentage_1 = number_1 / len(clf_1.feature_count_[0])
 print(percentage_1)
 print(number_1)
 
+# two favorite words and their log-prob
+vocabulary_list = vectorizer.get_feature_names_out()
+favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
+favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
+print(clf_1.feature_log_prob_)
+print(clf_1.class_log_prior_)
 
 # remember to close the file!
 f.close()
