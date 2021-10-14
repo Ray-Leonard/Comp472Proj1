@@ -150,10 +150,24 @@ f.write("count: " + str(number_1) + '\n')
 vocabulary_list = vectorizer.get_feature_names_out()
 favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
 favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
-print(clf_1.feature_log_prob_)
 f.write("\n(k) 2 favorite words and their log-prob\n")
-f.write("potato: " + '\n')
-f.write('find: ' + "\n")
+row_Index_7k = row_Index_7e
+f.write("potato: \n")
+business = clf_1.feature_log_prob_[0][favorite_index_1]
+entertainment = clf_1.feature_log_prob_[1][favorite_index_1]
+politics = clf_1.feature_log_prob_[2][favorite_index_1]
+sport = clf_1.feature_log_prob_[3][favorite_index_1]
+tech = clf_1.feature_log_prob_[4][favorite_index_1]
+ans7k_1 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7k)
+f.write(tabulate(ans7k_1, tablefmt='grid'))
+f.write('\nfind: \n')
+business = clf_1.feature_log_prob_[0][favorite_index_2]
+entertainment = clf_1.feature_log_prob_[1][favorite_index_2]
+politics = clf_1.feature_log_prob_[2][favorite_index_2]
+sport = clf_1.feature_log_prob_[3][favorite_index_2]
+tech = clf_1.feature_log_prob_[4][favorite_index_2]
+ans7k_2 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7k)
+f.write(tabulate(ans7k_2, tablefmt='grid'))
 
 # remember to close the file!
 f.close()
