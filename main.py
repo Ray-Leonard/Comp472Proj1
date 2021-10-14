@@ -55,13 +55,11 @@ BBC_data_raw = load_files("inputData/BBC/", load_content=True, encoding="latin1"
 # 4 pre-process dataset to have the features ready to be used for NB
 vectorizer = CountVectorizer()
 BBC_data = vectorizer.fit_transform(BBC_data_raw.data).toarray()    # X
-# TEST
-# print(vectorizer.get_feature_names_out())
-# END_TEST
+
 
 # 5 split
 BBC_classes = BBC_data_raw.target  # y
-BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_split(BBC_data, BBC_classes, random_state=0)
+BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_split(BBC_data, BBC_classes, random_state=0, train_size=0.8)
 
 
 # generating report
@@ -91,22 +89,85 @@ row_Index_7d = ["accuracy", "macro F1", "weighted F1"]
 accuracy = str(accuracy_score(BBC_classes_test, try_1_pred))
 macro_f1 = str(f1_score(BBC_classes_test, try_1_pred, average='macro'))
 weighted_f1 = str(f1_score(BBC_classes_test, try_1_pred, average='weighted'))
-ans7d = pd.DataFrame({accuracy, macro_f1, weighted_f1}, row_Index_7d)
+ans7d = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index_7d)
 f.write(tabulate(ans7d, tablefmt="grid"))
 
 # prior prob of each class
 f.write("\n(e) the prior probability of each class\n")
-classification_report_1_dict = classification_report(BBC_classes_test, try_1_pred, target_names=BBC_data_raw.target_names, output_dict=True)
-total_1 = classification_report_1_dict['macro avg']['support']
+total_1 = sum(clf_1.class_count_)
 row_Index_7e = ["business", "entertainment", "politics", "sport", "tech"]
-business = str(classification_report_1_dict['business']['support'] / total_1)
-entertainment = str(classification_report_1_dict['entertainment']['support'] / total_1)
-politics = str(classification_report_1_dict['politics']['support'] / total_1)
-sport = str(classification_report_1_dict['sport']['support'] / total_1)
-tech = str(classification_report_1_dict['tech']['support'] / total_1)
-ans7e = pd.DataFrame({business, entertainment, politics, sport, tech}, row_Index_7e)
+business = (clf_1.class_count_[0] / total_1)
+entertainment = (clf_1.class_count_[1] / total_1)
+politics = (clf_1.class_count_[2] / total_1)
+sport = (clf_1.class_count_[3] / total_1)
+tech = (clf_1.class_count_[4] / total_1)
+ans7e = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7e)
 f.write(tabulate(ans7e, tablefmt="grid"))
 
+# vocabulary size
+f.write("\n(f) the size of the vocabulary: " + str(len(clf_1.feature_count_[0])))
+
+# number of word-tokens in each class
+f.write("\n(g) number of word-tokens in each class\n")
+row_Index_7g = row_Index_7e
+business = sum(clf_1.feature_count_[0])
+entertainment = sum(clf_1.feature_count_[1])
+politics = sum(clf_1.feature_count_[2])
+sport = sum(clf_1.feature_count_[3])
+tech = sum(clf_1.feature_count_[4])
+ans7g = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7g)
+f.write(tabulate(ans7g, tablefmt='grid'))
+
+f.write('\n(h) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_1.feature_count_))) + '\n')
+
+f.write('\n(i) the number and percentage of words with a frequency of zero in each class\n')
+percentage_0 = []
+number_0 = []
+for i in range(len(clf_1.feature_count_)):
+    n = 0
+    for j in range(len(clf_1.feature_count_[i])):
+        if clf_1.feature_count_[i][j] == 0:
+            n += 1
+    number_0.append(n)
+    percentage_0.append(n / len(clf_1.feature_count_[i]))
+# please help me do the formatting and write to file
+print(percentage_0)
+print(number_0)
+
+f.write('\n(j) the number and percentage of words with a frequency of one in the entire corpus\n')
+number_1 = 0
+for i in range(len(clf_1.feature_count_[0])):
+    count = 0
+    for j in range(len(clf_1.feature_count_)):
+        count += clf_1.feature_count_[j][i]
+    if count == 1:
+        number_1 += 1
+percentage_1 = number_1 / len(clf_1.feature_count_[0])
+f.write("percentage: " + str(percentage_1) + '\n')
+f.write("count: " + str(number_1) + '\n')
+
+# two favorite words and their log-prob
+vocabulary_list = vectorizer.get_feature_names_out()
+favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
+favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
+f.write("\n(k) 2 favorite words and their log-prob\n")
+row_Index_7k = row_Index_7e
+f.write("potato: \n")
+business = clf_1.feature_log_prob_[0][favorite_index_1]
+entertainment = clf_1.feature_log_prob_[1][favorite_index_1]
+politics = clf_1.feature_log_prob_[2][favorite_index_1]
+sport = clf_1.feature_log_prob_[3][favorite_index_1]
+tech = clf_1.feature_log_prob_[4][favorite_index_1]
+ans7k_1 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7k)
+f.write(tabulate(ans7k_1, tablefmt='grid'))
+f.write('\nfind: \n')
+business = clf_1.feature_log_prob_[0][favorite_index_2]
+entertainment = clf_1.feature_log_prob_[1][favorite_index_2]
+politics = clf_1.feature_log_prob_[2][favorite_index_2]
+sport = clf_1.feature_log_prob_[3][favorite_index_2]
+tech = clf_1.feature_log_prob_[4][favorite_index_2]
+ans7k_2 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7k)
+f.write(tabulate(ans7k_2, tablefmt='grid'))
 
 # remember to close the file!
 f.close()
