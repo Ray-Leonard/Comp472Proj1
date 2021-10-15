@@ -14,15 +14,6 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 from tabulate import tabulate
 
-# mentioned in part2
-import pandas as pd
-from sklearn.naive_bayes import GaussianNB
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.model_selection import GridSearchCV
-from sklearn.linear_model import Perceptron
-from sklearn.neural_network import MLPClassifier
-
-
 # part1 - 2
 # create a list that contains corresponding count
 def walkFiles(folder_li):
