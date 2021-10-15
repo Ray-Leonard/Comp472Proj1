@@ -43,14 +43,11 @@ y = np.array(files_num_list)
 
 plt.bar(x, y, color="#602D35", width=0.2)
 plt.savefig('BBC-distribution.pdf', dpi=320)
-plt.show()
+
 
 # 3 load files with encoding latin1
 BBC_data_raw = load_files("inputData/BBC/", load_content=True, encoding="latin1")
-# TEST
-# print(BBC_data_raw.target_names)
-# print(BBC_data_raw.data)
-# END_TEST
+
 
 # 4 pre-process dataset to have the features ready to be used for NB
 vectorizer = CountVectorizer()
@@ -66,8 +63,9 @@ BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_
 f = open("bbc-performance.txt", 'w')
 f.write("(a) ---------------- MultinomialNB default values, try 1 ---------------\n")
 
+#################################### 1st try ###########################################################################
 # 6 - 1st try
-clf_1 = MultinomialNB(alpha=1.0e-10)
+clf_1 = MultinomialNB()
 # train
 clf_1.fit(BBC_data_train, BBC_classes_train)
 # test
@@ -131,11 +129,9 @@ for i in range(len(clf_1.feature_count_)):
             n += 1
     number_0.append(n)
     percentage_0.append(n / len(clf_1.feature_count_[i]))
-# please help me do the formatting and write to file
-print(percentage_0)
-print(number_0)
-ans7i_percent = pd.DataFrame(row_Index_7i, percentage_0)
-ans7i_num = pd.DataFrame(row_Index_7i, percentage_0)
+
+ans7i_percent = pd.DataFrame(percentage_0, row_Index_7i)
+ans7i_num = pd.DataFrame(number_0, row_Index_7i)
 f.write("[Number]:\n")
 f.write(tabulate(ans7i_num, tablefmt='grid'))
 f.write("\n\n[Percentage]:\n")
@@ -145,11 +141,8 @@ f.write(tabulate(ans7i_percent, tablefmt='grid'))
 
 f.write('\n(j) the number and percentage of words with a frequency of one in the entire corpus\n')
 number_1 = 0
-for i in range(len(clf_1.feature_count_[0])):
-    count = 0
-    for j in range(len(clf_1.feature_count_)):
-        count += clf_1.feature_count_[j][i]
-    if count == 1:
+for i in sum(clf_1.feature_count_):
+    if i == 1:
         number_1 += 1
 percentage_1 = number_1 / len(clf_1.feature_count_[0])
 f.write("percentage: " + str(percentage_1) + '\n')
@@ -178,9 +171,9 @@ tech = clf_1.feature_log_prob_[4][favorite_index_2]
 ans7k_2 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7k)
 f.write(tabulate(ans7k_2, tablefmt='grid'))
 
-# 8- 2nd try Model2
-f.write(" \n--------------- MultinomialNB default values, try 2 ---------------\n")
-clf_2 = MultinomialNB(alpha=1.0e-10)
+######################################### 8- 2nd try Model2 ############################################################
+f.write(" \n\n--------------- MultinomialNB default values, try 2 ---------------\n")
+clf_2 = MultinomialNB()
 # train
 clf_2.fit(BBC_data_train, BBC_classes_train)
 # test
@@ -214,7 +207,7 @@ entertainment = (clf_2.class_count_[1] / total_2)
 politics = (clf_2.class_count_[2] / total_2)
 sport = (clf_2.class_count_[3] / total_2)
 tech = (clf_2.class_count_[4] / total_2)
-ans8e = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7e)
+ans8e = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_8e)
 f.write(tabulate(ans8e, tablefmt="grid"))
 
 # vocabulary size
@@ -236,7 +229,7 @@ f.write('\n(g) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_2
 f.write('\n(h) the number and percentage of words with a frequency of zero in each class\n')
 percentage_0 = []
 number_0 = []
-row_Index_8i=row_Index_8e;
+row_Index_8i=row_Index_8e
 for i in range(len(clf_2.feature_count_)):
     n = 0
     for j in range(len(clf_2.feature_count_[i])):
@@ -244,9 +237,6 @@ for i in range(len(clf_2.feature_count_)):
             n += 1
     number_0.append(n)
     percentage_0.append(n / len(clf_2.feature_count_[i]))
-# please help me do the formatting and write to file
-print(percentage_0)
-print(number_0)
 ans8i_percent = pd.DataFrame(percentage_0,row_Index_8i)
 ans8i_num = pd.DataFrame(number_0,row_Index_8i)
 f.write("[Number]:\n")
@@ -256,18 +246,14 @@ f.write(tabulate(ans8i_percent, tablefmt='grid'))
 
 f.write('\n(i) the number and percentage of words with a frequency of one in the entire corpus\n')
 number_1 = 0
-for i in range(len(clf_2.feature_count_[0])):
-    count = 0
-    for j in range(len(clf_2.feature_count_)):
-        count += clf_2.feature_count_[j][i]
-    if count == 1:
+for i in sum(clf_2.feature_count_):
+    if i == 1:
         number_1 += 1
 percentage_1 = number_1 / len(clf_2.feature_count_[0])
 f.write("percentage: " + str(percentage_1) + '\n')
 f.write("count: " + str(number_1) + '\n')
 
 # two favorite words and their log-prob
-vocabulary_list = vectorizer.get_feature_names_out()
 favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
 favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
 f.write("\n(j) 2 favorite words and their log-prob\n")
@@ -289,7 +275,7 @@ tech = clf_2.feature_log_prob_[4][favorite_index_2]
 ans8k_2 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_8k)
 f.write(tabulate(ans8k_2, tablefmt='grid'))
 
-#f = open("bbc-performance.txt", 'w')
+######################################################################################################################
 f.write("\n---------------- MultinomialNB smoothing values [0.0001] ---------------\n")
 clf_3 = MultinomialNB(alpha=0.0001)
 # train
@@ -298,7 +284,7 @@ clf_3.fit(BBC_data_train, BBC_classes_train)
 try_3_pred = clf_3.predict(BBC_data_test)
 
 # confusion matrix
-confusion_matrix_3 = confusion_matrix(BBC_classes_test, try_2_pred)
+confusion_matrix_3 = confusion_matrix(BBC_classes_test, try_3_pred)
 f.write("(a) The Confusion Matrix\n")
 cm3 = pd.DataFrame(confusion_matrix_3, index=folder_list)
 f.write(tabulate(cm3, folder_list, tablefmt="grid", stralign='center'))
@@ -355,31 +341,24 @@ for i in range(len(clf_3.feature_count_)):
             n += 1
     number_0.append(n)
     percentage_0.append(n / len(clf_3.feature_count_[i]))
-# please help me do the formatting and write to file
-print(percentage_0)
-print(number_0)
 ans9i_percent = pd.DataFrame(percentage_0,row_Index_9i)
 ans9i_num = pd.DataFrame(number_0, row_Index_9i)
 f.write("[Number]:\n")
 f.write(tabulate(ans9i_num,tablefmt='grid'))
-f.write("[Percentage]:\n")
+f.write("\n[Percentage]:\n")
 f.write(tabulate(ans9i_percent, tablefmt='grid'))
 
 
 f.write('\n(i) the number and percentage of words with a frequency of one in the entire corpus\n')
-number_2 = 0
-for i in range(len(clf_3.feature_count_[0])):
-    count = 0
-    for j in range(len(clf_3.feature_count_)):
-        count += clf_3.feature_count_[j][i]
-    if count == 1:
-        number_2 += 1
-percentage_3 = number_2 / len(clf_3.feature_count_[0])
-f.write("percentage: " + str(percentage_3) + '\n')
-f.write("count: " + str(number_2) + '\n')
+number_1 = 0
+for i in sum(clf_3.feature_count_):
+    if i == 1:
+        number_1 += 1
+percentage_1 = number_1 / len(clf_3.feature_count_[0])
+f.write("percentage: " + str(percentage_1) + '\n')
+f.write("count: " + str(number_1) + '\n')
 
 # two favorite words and their log-prob
-vocabulary_list = vectorizer.get_feature_names_out()
 favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
 favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
 f.write("\n(j) 2 favorite words and their log-prob\n")
@@ -401,8 +380,9 @@ tech = clf_3.feature_log_prob_[4][favorite_index_2]
 ans9k_2 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_9k)
 f.write(tabulate(ans9k_2, tablefmt='grid'))
 
+
+######################################################################################################################
 # generating report
-#f = open("bbc-performance.txt", 'w')
 f.write("\n---------------- MultinomialNB smoothing values [0.9] ---------------\n")
 clf_4 = MultinomialNB(alpha=0.9)
 # train
@@ -461,38 +441,31 @@ f.write('\n(h) the number and percentage of words with a frequency of zero in ea
 percentage_0 = []
 number_0 = []
 row_Index_10i=["business", "entertainment", "politics", "sport", "tech"]
-for i in range(len(clf_3.feature_count_)):
+for i in range(len(clf_4.feature_count_)):
     n = 0
-    for j in range(len(clf_3.feature_count_[i])):
-        if clf_3.feature_count_[i][j] == 0:
+    for j in range(len(clf_4.feature_count_[i])):
+        if clf_4.feature_count_[i][j] == 0:
             n += 1
     number_0.append(n)
-    percentage_0.append(n / len(clf_3.feature_count_[i]))
-# please help me do the formatting and write to file
-print(percentage_0)
-print(number_0)
+    percentage_0.append(n / len(clf_4.feature_count_[i]))
 ans10i_percent = pd.DataFrame(percentage_0,row_Index_10i)
 ans10i_num = pd.DataFrame(number_0,row_Index_10i)
 f.write("[Number]:\n")
 f.write(tabulate(ans10i_num,tablefmt='grid'))
-f.write("[Percentage]:\n")
+f.write("\n[Percentage]:\n")
 f.write(tabulate(ans10i_percent, tablefmt='grid'))
 
 
 f.write('\n(i) the number and percentage of words with a frequency of one in the entire corpus\n')
-number_2 = 0
-for i in range(len(clf_4.feature_count_[0])):
-    count = 0
-    for j in range(len(clf_4.feature_count_)):
-        count += clf_4.feature_count_[j][i]
-    if count == 1:
-        number_2 += 1
-percentage_3 = number_2 / len(clf_4.feature_count_[0])
-f.write("percentage: " + str(percentage_3) + '\n')
-f.write("count: " + str(number_2) + '\n')
+number_1 = 0
+for i in sum(clf_4.feature_count_):
+    if i == 1:
+        number_1 += 1
+percentage_1 = number_1 / len(clf_4.feature_count_[0])
+f.write("percentage: " + str(percentage_1) + '\n')
+f.write("count: " + str(number_1) + '\n')
 
 # two favorite words and their log-prob
-vocabulary_list = vectorizer.get_feature_names_out()
 favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
 favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
 f.write("\n(j) 2 favorite words and their log-prob\n")
