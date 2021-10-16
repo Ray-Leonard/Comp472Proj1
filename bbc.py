@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import math
 import numpy as np
 import os
+import pandas as pd
 
 # mentioned in part1
 from sklearn.datasets import load_files
@@ -13,6 +14,7 @@ from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 from tabulate import tabulate
+
 
 # part1 - 2
 # create a list that contains corresponding count
@@ -35,26 +37,23 @@ y = np.array(files_num_list)
 plt.bar(x, y, color="#602D35", width=0.2)
 plt.savefig('BBC-distribution.pdf', dpi=320)
 
-
 # 3 load files with encoding latin1
 BBC_data_raw = load_files("inputData/BBC/", load_content=True, encoding="latin1")
 
-
 # 4 pre-process dataset to have the features ready to be used for NB
 vectorizer = CountVectorizer()
-BBC_data = vectorizer.fit_transform(BBC_data_raw.data).toarray()    # X
-
+BBC_data = vectorizer.fit_transform(BBC_data_raw.data).toarray()  # X
 
 # 5 split
 BBC_classes = BBC_data_raw.target  # y
-BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_split(BBC_data, BBC_classes, random_state=0, train_size=0.8)
-
+BBC_data_train, BBC_data_test, BBC_classes_train, BBC_classes_test = train_test_split(BBC_data, BBC_classes,
+                                                                                      random_state=0, train_size=0.8)
 
 # generating report
 f = open("bbc-performance.txt", 'w')
 f.write("(a) ---------------- MultinomialNB default values, try 1 ---------------\n")
 
-#################################### 1st try ###########################################################################
+# ------------------------------------- 1st try -------------------------------------
 # 6 - 1st try
 clf_1 = MultinomialNB()
 # train
@@ -112,7 +111,7 @@ f.write('\n(h) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_1
 f.write('\n(i) the number and percentage of words with a frequency of zero in each class\n')
 percentage_0 = []
 number_0 = []
-row_Index_7i=row_Index_7e
+row_Index_7i = row_Index_7e
 for i in range(len(clf_1.feature_count_)):
     n = 0
     for j in range(len(clf_1.feature_count_[i])):
@@ -127,8 +126,6 @@ f.write("[Number]:\n")
 f.write(tabulate(ans7i_num, tablefmt='grid'))
 f.write("\n\n[Percentage]:\n")
 f.write(tabulate(ans7i_percent, tablefmt='grid'))
-
-
 
 f.write('\n(j) the number and percentage of words with a frequency of one in the entire corpus\n')
 number_1 = 0
@@ -162,7 +159,7 @@ tech = clf_1.feature_log_prob_[4][favorite_index_2]
 ans7k_2 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_7k)
 f.write(tabulate(ans7k_2, tablefmt='grid'))
 
-######################################### 8- 2nd try Model2 ############################################################
+# ------------------------------------- 8- 2nd try Model2 -------------------------------------
 f.write(" \n\n--------------- MultinomialNB default values, try 2 ---------------\n")
 clf_2 = MultinomialNB()
 # train
@@ -220,7 +217,7 @@ f.write('\n(g) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_2
 f.write('\n(h) the number and percentage of words with a frequency of zero in each class\n')
 percentage_0 = []
 number_0 = []
-row_Index_8i=row_Index_8e
+row_Index_8i = row_Index_8e
 for i in range(len(clf_2.feature_count_)):
     n = 0
     for j in range(len(clf_2.feature_count_[i])):
@@ -228,8 +225,8 @@ for i in range(len(clf_2.feature_count_)):
             n += 1
     number_0.append(n)
     percentage_0.append(n / len(clf_2.feature_count_[i]))
-ans8i_percent = pd.DataFrame(percentage_0,row_Index_8i)
-ans8i_num = pd.DataFrame(number_0,row_Index_8i)
+ans8i_percent = pd.DataFrame(percentage_0, row_Index_8i)
+ans8i_num = pd.DataFrame(number_0, row_Index_8i)
 f.write("[Number]:\n")
 f.write(tabulate(ans8i_num, tablefmt='grid'))
 f.write("\n[Percentage]:\n")
@@ -266,7 +263,7 @@ tech = clf_2.feature_log_prob_[4][favorite_index_2]
 ans8k_2 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_8k)
 f.write(tabulate(ans8k_2, tablefmt='grid'))
 
-######################################################################################################################
+# --------------------------------------------------------------------------
 f.write("\n---------------- MultinomialNB smoothing values [0.0001] ---------------\n")
 clf_3 = MultinomialNB(alpha=0.0001)
 # train
@@ -332,13 +329,12 @@ for i in range(len(clf_3.feature_count_)):
             n += 1
     number_0.append(n)
     percentage_0.append(n / len(clf_3.feature_count_[i]))
-ans9i_percent = pd.DataFrame(percentage_0,row_Index_9i)
+ans9i_percent = pd.DataFrame(percentage_0, row_Index_9i)
 ans9i_num = pd.DataFrame(number_0, row_Index_9i)
 f.write("[Number]:\n")
-f.write(tabulate(ans9i_num,tablefmt='grid'))
+f.write(tabulate(ans9i_num, tablefmt='grid'))
 f.write("\n[Percentage]:\n")
 f.write(tabulate(ans9i_percent, tablefmt='grid'))
-
 
 f.write('\n(i) the number and percentage of words with a frequency of one in the entire corpus\n')
 number_1 = 0
@@ -371,8 +367,7 @@ tech = clf_3.feature_log_prob_[4][favorite_index_2]
 ans9k_2 = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_9k)
 f.write(tabulate(ans9k_2, tablefmt='grid'))
 
-
-######################################################################################################################
+# --------------------------------------------------------------------------
 # generating report
 f.write("\n---------------- MultinomialNB smoothing values [0.9] ---------------\n")
 clf_4 = MultinomialNB(alpha=0.9)
@@ -431,7 +426,7 @@ f.write('\n(g) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_4
 f.write('\n(h) the number and percentage of words with a frequency of zero in each class\n')
 percentage_0 = []
 number_0 = []
-row_Index_10i=["business", "entertainment", "politics", "sport", "tech"]
+row_Index_10i = ["business", "entertainment", "politics", "sport", "tech"]
 for i in range(len(clf_4.feature_count_)):
     n = 0
     for j in range(len(clf_4.feature_count_[i])):
@@ -439,13 +434,12 @@ for i in range(len(clf_4.feature_count_)):
             n += 1
     number_0.append(n)
     percentage_0.append(n / len(clf_4.feature_count_[i]))
-ans10i_percent = pd.DataFrame(percentage_0,row_Index_10i)
-ans10i_num = pd.DataFrame(number_0,row_Index_10i)
+ans10i_percent = pd.DataFrame(percentage_0, row_Index_10i)
+ans10i_num = pd.DataFrame(number_0, row_Index_10i)
 f.write("[Number]:\n")
-f.write(tabulate(ans10i_num,tablefmt='grid'))
+f.write(tabulate(ans10i_num, tablefmt='grid'))
 f.write("\n[Percentage]:\n")
 f.write(tabulate(ans10i_percent, tablefmt='grid'))
-
 
 f.write('\n(i) the number and percentage of words with a frequency of one in the entire corpus\n')
 number_1 = 0
