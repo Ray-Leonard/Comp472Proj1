@@ -114,8 +114,115 @@ f.write(tabulate(displayed_data, tablefmt="grid"))
 # (c) Top-DT: a better performing Decision Tree found using (GridSearchCV). The grid search will allow
 # you to find the best combination of hyper-parameters, as determined by the evaluation function that
 # you have determined in step (3) above. The hyper-parameters that you will experiment with are:
-f.write("\n(c) ---------------- Top-DT default values-------------------\n")
-# Experiment 1  Gini + max_depth(3) + min_sampple_split(2)
+f.write("\n(c) -----------------Top-DT {Entropy + Max Depth: [3] + Min Sample split: [2]}--------------------\n")
+# Experiment 1  Entropy + max_depth(3) + min_sample_split(2)
+tree_para_1 = {'criterion': ['entropy'], 'max_depth': [3], 'min_samples_split': [2]}
+clf3_1 = GridSearchCV(DecisionTreeClassifier(), tree_para_1)
+clf3_1.fit(X, y)
+# tree.plot_tree(clf3)
+predict_result_3_1 = clf3_1.predict(test_X)
+
+
+
+cm = confusion_matrix(drug_test_target, predict_result_3_1)
+class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
+f.write("The Confusion Matrix\n")
+cm1 = pd.DataFrame(cm, index=class_columns)
+f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
+f.write('\n')
+
+classification_report_3_1= classification_report(drug_test_target, predict_result_3_1, target_names=class_columns)
+f.write("Precision, recall, and F1-measure for each class\n")
+f.write(classification_report_3_1)
+f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
+row_Index = ["accuracy", "macro F1", "weighted F1"]
+accuracy = str(accuracy_score(drug_test_target, predict_result_3_1))
+macro_f1 = str(f1_score(drug_test_target, predict_result_3_1, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_3_1, average='weighted'))
+displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
+f.write(tabulate(displayed_data, tablefmt="grid"))
+
+f.write("\n------------------- Top-DT {Entropy + Max Depth: [4] + Min Sample split: [2]}-------------------\n")
+# Experiment 2  Entropy + max_depth(4) + min_sample_split(2)
+tree_para_2 = {'criterion': ['entropy'], 'max_depth': [4], 'min_samples_split': [2]}
+clf3_2 = GridSearchCV(DecisionTreeClassifier(), tree_para_2)
+clf3_2.fit(X, y)
+# tree.plot_tree(clf3)
+predict_result_3_2 = clf3_2.predict(test_X)
+
+
+cm = confusion_matrix(drug_test_target, predict_result_3_1)
+class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
+f.write("The Confusion Matrix\n")
+cm1 = pd.DataFrame(cm, index=class_columns)
+f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
+f.write('\n')
+
+classification_report_3_2 = classification_report(drug_test_target, predict_result_3_2, target_names=class_columns)
+f.write("Precision, recall, and F1-measure for each class\n")
+f.write(classification_report_3_2)
+f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
+row_Index = ["accuracy", "macro F1", "weighted F1"]
+accuracy = str(accuracy_score(drug_test_target, predict_result_3_2))
+macro_f1 = str(f1_score(drug_test_target, predict_result_3_2, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_3_2, average='weighted'))
+displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
+f.write(tabulate(displayed_data, tablefmt="grid"))
+
+f.write("\n------------------- Top-DT {Entropy + Max Depth: [4] + Min Sample split: [3]}-------------------\n")
+# Experiment 3  Entropy + max_depth(4) + min_sample_split(3)
+tree_para_3 = {'criterion': ['entropy'], 'max_depth': [4], 'min_samples_split': [3]}
+clf3_3 = GridSearchCV(DecisionTreeClassifier(), tree_para_3)
+clf3_3.fit(X, y)
+# tree.plot_tree(clf3)
+predict_result_3_3 = clf3_3.predict(test_X)
+
+
+cm = confusion_matrix(drug_test_target, predict_result_3_3)
+class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
+f.write("The Confusion Matrix\n")
+cm1 = pd.DataFrame(cm, index=class_columns)
+f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
+f.write('\n')
+
+classification_report_3_3 = classification_report(drug_test_target, predict_result_3_3, target_names=class_columns)
+f.write("Precision, recall, and F1-measure for each class\n")
+f.write(classification_report_3_3)
+f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
+row_Index = ["accuracy", "macro F1", "weighted F1"]
+accuracy = str(accuracy_score(drug_test_target, predict_result_3_3))
+macro_f1 = str(f1_score(drug_test_target, predict_result_3_3, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_3_3, average='weighted'))
+displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
+f.write(tabulate(displayed_data, tablefmt="grid"))
+
+
+f.write("\n------------------- Top-DT {Entropy + Max Depth: [4] + Min Sample split: [4]}-------------------\n")
+# Experiment 4  Entropy + max_depth(4) + min_sample_split(4)
+tree_para_4 = {'criterion': ['entropy'], 'max_depth': [4], 'min_samples_split': [4]}
+clf3_4 = GridSearchCV(DecisionTreeClassifier(), tree_para_4)
+clf3_4.fit(X, y)
+# tree.plot_tree(clf3)
+predict_result_3_4 = clf3_4.predict(test_X)
+
+
+cm = confusion_matrix(drug_test_target, predict_result_3_4)
+class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
+f.write("The Confusion Matrix\n")
+cm1 = pd.DataFrame(cm, index=class_columns)
+f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
+f.write('\n')
+
+classification_report_3_4 = classification_report(drug_test_target, predict_result_3_4, target_names=class_columns)
+f.write("Precision, recall, and F1-measure for each class\n")
+f.write(classification_report_3_4)
+f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
+row_Index = ["accuracy", "macro F1", "weighted F1"]
+accuracy = str(accuracy_score(drug_test_target, predict_result_3_4))
+macro_f1 = str(f1_score(drug_test_target, predict_result_3_4, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_3_4, average='weighted'))
+displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
+f.write(tabulate(displayed_data, tablefmt="grid"))
 
 
 # (d) PER: a Perceptron (linear model.Perceptron), with default parameter values
