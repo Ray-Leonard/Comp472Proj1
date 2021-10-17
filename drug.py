@@ -24,11 +24,22 @@ from sklearn.metrics import f1_score
 from tabulate import tabulate
 
 # Read the csv file
-dataframe = pd.read_csv(r'inputData\Drug\drug200.csv')
-classname = cbook.get_sample_data(r'inputData\Drug\drug200.csv', asfileobj=False)
+file_addr = r'inputData\Drug\drug200.csv'
+dataframe = pd.read_csv(file_addr)
+classname = cbook.get_sample_data(file_addr, asfileobj=False)
 
-# Plot the data of drug200.csv(not done yet)
+# Plot the data of drug200.csv
 plt.style.use('classic')
+drug_group = [x for x in dataframe['Drug']]
+drug_type_count = []
+drug_type = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
+for x in drug_type:
+    drug_type_count.append(drug_group.count(x))
+x = np.array(drug_type)
+y = np.array(drug_type_count)
+plt.bar(x, y, color="#FFCB6B", width=0.2)
+plt.savefig('Drug-distribution.pdf', dpi=320)
+
 
 # Convert all ordinal and nominal data to data in numeric format
 dataframe['Drug'].replace({'drugA': 1, 'drugB': 2, 'drugC': 3, 'drugX': 4, 'drugY': 5}, inplace=True)
@@ -38,7 +49,7 @@ dataframe['Cholesterol'].replace({'LOW': 1, 'NORMAL': 2,    'HIGH': 3}, inplace=
 print(dataframe)
 
 # split the data set
-drug_train, drug_test, drug_train_target, drug_test_target = train_test_split(dataframe, dataframe['Drug'],test_size=0.5, random_state=0)
+drug_train, drug_test, drug_train_target, drug_test_target = train_test_split(dataframe, dataframe['Drug'], test_size=0.5, random_state=0)
 print(drug_train)
 print(drug_test)
 
