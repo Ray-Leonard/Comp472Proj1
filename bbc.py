@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import math
 import numpy as np
 import os
 import pandas as pd
@@ -169,16 +168,16 @@ try_2_pred = clf_2.predict(BBC_data_test)
 
 # confusion matrix
 confusion_matrix_2 = confusion_matrix(BBC_classes_test, try_2_pred)
-f.write("(a) The Confusion Matrix\n")
+f.write("(b) The Confusion Matrix\n")
 cm2 = pd.DataFrame(confusion_matrix_2, index=folder_list)
 f.write(tabulate(cm2, folder_list, tablefmt="grid", stralign='center'))
 f.write('\n')
 
 # using classification_report, accuracy_score, and f1_score to get precision, recall and F1-measure
 classification_report_2 = classification_report(BBC_classes_test, try_2_pred, target_names=BBC_data_raw.target_names)
-f.write("(b) Precision, recall, and F1-measure for each class\n")
+f.write("(c) Precision, recall, and F1-measure for each class\n")
 f.write(classification_report_2)
-f.write('\n(c) accuracy, macro-average F1 and weighted-average F1\n')
+f.write('\n(d) accuracy, macro-average F1 and weighted-average F1\n')
 row_Index_8d = ["accuracy", "macro F1", "weighted F1"]
 accuracy = str(accuracy_score(BBC_classes_test, try_2_pred))
 macro_f1 = str(f1_score(BBC_classes_test, try_2_pred, average='macro'))
@@ -187,7 +186,7 @@ ans8d = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index_8d)
 f.write(tabulate(ans8d, tablefmt="grid"))
 
 # prior prob of each class
-f.write("\n(d) the prior probability of each class\n")
+f.write("\n(e) the prior probability of each class\n")
 total_2 = sum(clf_2.class_count_)
 row_Index_8e = ["business", "entertainment", "politics", "sport", "tech"]
 business = (clf_2.class_count_[0] / total_2)
@@ -199,10 +198,10 @@ ans8e = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index
 f.write(tabulate(ans8e, tablefmt="grid"))
 
 # vocabulary size
-f.write("\n(e) the size of the vocabulary: " + str(len(clf_2.feature_count_[0])))
+f.write("\n(f) the size of the vocabulary: " + str(len(clf_2.feature_count_[0])))
 
 # number of word-tokens in each class
-f.write("\n(f) number of word-tokens in each class\n")
+f.write("\n(g) number of word-tokens in each class\n")
 row_Index_8g = row_Index_8e
 business = sum(clf_2.feature_count_[0])
 entertainment = sum(clf_2.feature_count_[1])
@@ -212,9 +211,9 @@ tech = sum(clf_2.feature_count_[4])
 ans8g = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_8g)
 f.write(tabulate(ans8g, tablefmt='grid'))
 
-f.write('\n(g) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_2.feature_count_))) + '\n')
+f.write('\n(h) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_2.feature_count_))) + '\n')
 
-f.write('\n(h) the number and percentage of words with a frequency of zero in each class\n')
+f.write('\n(i) the number and percentage of words with a frequency of zero in each class\n')
 percentage_0 = []
 number_0 = []
 row_Index_8i = row_Index_8e
@@ -232,7 +231,7 @@ f.write(tabulate(ans8i_num, tablefmt='grid'))
 f.write("\n[Percentage]:\n")
 f.write(tabulate(ans8i_percent, tablefmt='grid'))
 
-f.write('\n(i) the number and percentage of words with a frequency of one in the entire corpus\n')
+f.write('\n(j) the number and percentage of words with a frequency of one in the entire corpus\n')
 number_1 = 0
 for i in sum(clf_2.feature_count_):
     if i == 1:
@@ -244,7 +243,7 @@ f.write("count: " + str(number_1) + '\n')
 # two favorite words and their log-prob
 favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
 favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
-f.write("\n(j) 2 favorite words and their log-prob\n")
+f.write("\n(k) 2 favorite words and their log-prob\n")
 row_Index_8k = row_Index_8e
 f.write("potato: \n")
 business = clf_2.feature_log_prob_[0][favorite_index_1]
@@ -273,16 +272,16 @@ try_3_pred = clf_3.predict(BBC_data_test)
 
 # confusion matrix
 confusion_matrix_3 = confusion_matrix(BBC_classes_test, try_3_pred)
-f.write("(a) The Confusion Matrix\n")
+f.write("(b) The Confusion Matrix\n")
 cm3 = pd.DataFrame(confusion_matrix_3, index=folder_list)
 f.write(tabulate(cm3, folder_list, tablefmt="grid", stralign='center'))
 f.write('\n')
 
 # using classification_report, accuracy_score, and f1_score to get precision, recall and F1-measure
 classification_report_3 = classification_report(BBC_classes_test, try_3_pred, target_names=BBC_data_raw.target_names)
-f.write("(b) Precision, recall, and F1-measure for each class\n")
+f.write("(c) Precision, recall, and F1-measure for each class\n")
 f.write(classification_report_3)
-f.write('\n(c) accuracy, macro-average F1 and weighted-average F1\n')
+f.write('\n(d) accuracy, macro-average F1 and weighted-average F1\n')
 row_Index_9d = ["accuracy", "macro F1", "weighted F1"]
 accuracy = str(accuracy_score(BBC_classes_test, try_3_pred))
 macro_f1 = str(f1_score(BBC_classes_test, try_3_pred, average='macro'))
@@ -291,7 +290,7 @@ ans9d = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index_9d)
 f.write(tabulate(ans9d, tablefmt="grid"))
 
 # prior prob of each class
-f.write("\n(d) the prior probability of each class\n")
+f.write("\n(e) the prior probability of each class\n")
 total_3 = sum(clf_3.class_count_)
 row_Index_9e = ["business", "entertainment", "politics", "sport", "tech"]
 business = (clf_3.class_count_[0] / total_3)
@@ -303,10 +302,10 @@ ans9e = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index
 f.write(tabulate(ans9e, tablefmt="grid"))
 
 # vocabulary size
-f.write("\n(e) the size of the vocabulary: " + str(len(clf_3.feature_count_[0])))
+f.write("\n(f) the size of the vocabulary: " + str(len(clf_3.feature_count_[0])))
 
 # number of word-tokens in each class
-f.write("\n(f) number of word-tokens in each class\n")
+f.write("\n(g) number of word-tokens in each class\n")
 row_Index_9g = row_Index_9e
 business = sum(clf_3.feature_count_[0])
 entertainment = sum(clf_3.feature_count_[1])
@@ -316,9 +315,9 @@ tech = sum(clf_3.feature_count_[4])
 ans9g = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_9g)
 f.write(tabulate(ans9g, tablefmt='grid'))
 
-f.write('\n(g) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_3.feature_count_))) + '\n')
+f.write('\n(h) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_3.feature_count_))) + '\n')
 
-f.write('\n(h) the number and percentage of words with a frequency of zero in each class\n')
+f.write('\n(i) the number and percentage of words with a frequency of zero in each class\n')
 percentage_0 = []
 number_0 = []
 row_Index_9i = ["business", "entertainment", "politics", "sport", "tech"]
@@ -336,7 +335,7 @@ f.write(tabulate(ans9i_num, tablefmt='grid'))
 f.write("\n[Percentage]:\n")
 f.write(tabulate(ans9i_percent, tablefmt='grid'))
 
-f.write('\n(i) the number and percentage of words with a frequency of one in the entire corpus\n')
+f.write('\n(j) the number and percentage of words with a frequency of one in the entire corpus\n')
 number_1 = 0
 for i in sum(clf_3.feature_count_):
     if i == 1:
@@ -348,7 +347,7 @@ f.write("count: " + str(number_1) + '\n')
 # two favorite words and their log-prob
 favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
 favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
-f.write("\n(j) 2 favorite words and their log-prob\n")
+f.write("\n(k) 2 favorite words and their log-prob\n")
 row_Index_9k = row_Index_9e
 f.write("potato: \n")
 business = clf_3.feature_log_prob_[0][favorite_index_1]
@@ -378,16 +377,16 @@ try_4_pred = clf_4.predict(BBC_data_test)
 
 # confusion matrix
 confusion_matrix_4 = confusion_matrix(BBC_classes_test, try_4_pred)
-f.write("(a) The Confusion Matrix\n")
+f.write("(b) The Confusion Matrix\n")
 cm4 = pd.DataFrame(confusion_matrix_4, index=folder_list)
 f.write(tabulate(cm4, folder_list, tablefmt="grid", stralign='center'))
 f.write('\n')
 
 # using classification_report, accuracy_score, and f1_score to get precision, recall and F1-measure
 classification_report_4 = classification_report(BBC_classes_test, try_4_pred, target_names=BBC_data_raw.target_names)
-f.write("(b) Precision, recall, and F1-measure for each class\n")
+f.write("(c) Precision, recall, and F1-measure for each class\n")
 f.write(classification_report_4)
-f.write('\n(c) accuracy, macro-average F1 and weighted-average F1\n')
+f.write('\n(d) accuracy, macro-average F1 and weighted-average F1\n')
 row_Index_10d = ["accuracy", "macro F1", "weighted F1"]
 accuracy = str(accuracy_score(BBC_classes_test, try_4_pred))
 macro_f1 = str(f1_score(BBC_classes_test, try_4_pred, average='macro'))
@@ -396,7 +395,7 @@ ans10d = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index_10d)
 f.write(tabulate(ans10d, tablefmt="grid"))
 
 # prior prob of each class
-f.write("\n(d) the prior probability of each class\n")
+f.write("\n(e) the prior probability of each class\n")
 total_4 = sum(clf_4.class_count_)
 row_Index_10e = ["business", "entertainment", "politics", "sport", "tech"]
 business = (clf_4.class_count_[0] / total_4)
@@ -408,10 +407,10 @@ ans10e = pd.DataFrame([business, entertainment, politics, sport, tech], row_Inde
 f.write(tabulate(ans10e, tablefmt="grid"))
 
 # vocabulary size
-f.write("\n(e) the size of the vocabulary: " + str(len(clf_4.feature_count_[0])))
+f.write("\n(f) the size of the vocabulary: " + str(len(clf_4.feature_count_[0])))
 
 # number of word-tokens in each class
-f.write("\n(f) number of word-tokens in each class\n")
+f.write("\n(g) number of word-tokens in each class\n")
 row_Index_10g = row_Index_10e
 business = sum(clf_4.feature_count_[0])
 entertainment = sum(clf_4.feature_count_[1])
@@ -421,9 +420,9 @@ tech = sum(clf_4.feature_count_[4])
 ans10g = pd.DataFrame([business, entertainment, politics, sport, tech], row_Index_9g)
 f.write(tabulate(ans10g, tablefmt='grid'))
 
-f.write('\n(g) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_4.feature_count_))) + '\n')
+f.write('\n(h) number of word-tokens in the entire corpus: ' + str(sum(sum(clf_4.feature_count_))) + '\n')
 
-f.write('\n(h) the number and percentage of words with a frequency of zero in each class\n')
+f.write('\n(i) the number and percentage of words with a frequency of zero in each class\n')
 percentage_0 = []
 number_0 = []
 row_Index_10i = ["business", "entertainment", "politics", "sport", "tech"]
@@ -441,7 +440,7 @@ f.write(tabulate(ans10i_num, tablefmt='grid'))
 f.write("\n[Percentage]:\n")
 f.write(tabulate(ans10i_percent, tablefmt='grid'))
 
-f.write('\n(i) the number and percentage of words with a frequency of one in the entire corpus\n')
+f.write('\n(j) the number and percentage of words with a frequency of one in the entire corpus\n')
 number_1 = 0
 for i in sum(clf_4.feature_count_):
     if i == 1:
@@ -453,7 +452,7 @@ f.write("count: " + str(number_1) + '\n')
 # two favorite words and their log-prob
 favorite_index_1 = np.where(vocabulary_list == 'potato')[0][0]
 favorite_index_2 = np.where(vocabulary_list == 'find')[0][0]
-f.write("\n(j) 2 favorite words and their log-prob\n")
+f.write("\n(k) 2 favorite words and their log-prob\n")
 row_Index_10k = row_Index_10e
 f.write("potato: \n")
 business = clf_4.feature_log_prob_[0][favorite_index_1]
