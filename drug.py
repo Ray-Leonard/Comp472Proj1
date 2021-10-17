@@ -24,13 +24,8 @@ from sklearn.metrics import f1_score
 from tabulate import tabulate
 
 # Read the csv file
-
-dataframe = pd.read_csv(r'inputData\Drug\drug200.csv')
-# Plot the data of drug200.csv(not done yet)
-
 file_addr = r'inputData\Drug\drug200.csv'
 dataframe = pd.read_csv(file_addr)
-classname = cbook.get_sample_data(file_addr, asfileobj=False)
 
 # Plot the data of drug200.csv
 
@@ -45,7 +40,6 @@ y = np.array(drug_type_count)
 plt.bar(x, y, color="#FFCB6B", width=0.2)
 plt.savefig('Drug-distribution.pdf', dpi=320)
 
-
 # Convert all ordinal and nominal data to data in numeric format
 dataframe['Drug'].replace({'drugA': 1, 'drugB': 2, 'drugC': 3, 'drugX': 4, 'drugY': 5}, inplace=True)
 # dataframe['Drug'].replace({'drugA': 10, 'drugB': 26, 'drugC': 33, 'drugX': 24, 'drugY': 15}, inplace=True)
@@ -54,29 +48,11 @@ dataframe['Sex'].replace({'F': 0, 'M': 1}, inplace=True)
 dataframe['BP'].replace({'LOW': 1, 'NORMAL': 2, 'HIGH': 3}, inplace=True)
 dataframe['Cholesterol'].replace({'LOW': 1, 'NORMAL': 2, 'HIGH': 3}, inplace=True)
 
-# print(pd.get_dummies(dataframe['Drug']))
-# print(type(pd.get_dummies(dataframe['Drug'])))
-# print(pd.get_dummies(dataframe['Drug']).values)
-
-# print(dataframe.values)
-# print(len(dataframe.values))
-# print('\n')
 drug_data = dataframe.values[:, :-1]
-# print(drug_data)
-# print(len(drug_data))
 drug_classes = dataframe.values[:, -1]
 
-# drug_classes = pd.get_dummies(dataframe['Drug']).values
-# print(drug_classes)
-
 # split the data set
-
 drug_train, drug_test, drug_train_target, drug_test_target = train_test_split(drug_data, drug_classes)
-
-drug_train, drug_test, drug_train_target, drug_test_target = train_test_split(dataframe, dataframe['Drug'], test_size=0.5, random_state=0)
-print(drug_train)
-print(drug_test)
-
 
 # Task2_6 Run 6 different classifiers
 f = open("drug-performance.txt", 'w')
