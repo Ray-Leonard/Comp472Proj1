@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
@@ -23,6 +25,7 @@ from sklearn.metrics import accuracy_score
 from sklearn.metrics import f1_score
 from tabulate import tabulate
 
+warnings.filterwarnings('ignore')
 # Read the csv file
 file_addr = r'inputData\Drug\drug200.csv'
 dataframe = pd.read_csv(file_addr)
@@ -50,8 +53,12 @@ dataframe['Cholesterol'].replace({'LOW': 1, 'NORMAL': 2, 'HIGH': 3}, inplace=Tru
 drug_data = dataframe.values[:, :-1]
 drug_classes = dataframe.values[:, -1]
 
+# drug_classes_p = pd.get_dummies(dataframe['Drug']).values
+# print(drug_classes_p)
+
 # split the data set
 drug_train, drug_test, drug_train_target, drug_test_target = train_test_split(drug_data, drug_classes)
+# drug_train_p, drug_test_p, drug_train_target_p, drug_test_target_p = train_test_split(drug_data, drug_classes_p)
 
 # Task2_6 Run 6 different classifiers
 f = open("drug-performance.txt", 'w')
@@ -113,116 +120,36 @@ f.write(tabulate(displayed_data, tablefmt="grid"))
 # (c) Top-DT: a better performing Decision Tree found using (GridSearchCV). The grid search will allow
 # you to find the best combination of hyper-parameters, as determined by the evaluation function that
 # you have determined in step (3) above. The hyper-parameters that you will experiment with are:
-f.write("\n(c) -----------------Top-DT {Entropy + Max Depth: [3] + Min Sample split: [2]}--------------------\n")
+f.write("\n(c) -----------------Top-DT--------------------\n")
 # Experiment 1  Entropy + max_depth(3) + min_sample_split(2)
-tree_para_1 = {'criterion': ['entropy'], 'max_depth': [3], 'min_samples_split': [2]}
-clf3_1 = GridSearchCV(DecisionTreeClassifier(), tree_para_1)
-clf3_1.fit(X, y)
-# tree.plot_tree(clf3)
-predict_result_3_1 = clf3_1.predict(test_X)
+top_DT_param = {'criterion': ('entropy', 'gini'),
+                'max_depth': (5, 10), 'min_samples_split': (2, 4, 6)}
+clf_3 = GridSearchCV(DecisionTreeClassifier(), top_DT_param)
+clf_3.fit(X, y)
+# predict with the best found params
+predict_result_3 = clf_3.predict(test_X)
 
+# write in the best param combination
+f.write("Best parameter combination: \n")
+f.write(str(clf_3.best_params_) + '\n')
 
-
-cm = confusion_matrix(drug_test_target, predict_result_3_1)
+cm = confusion_matrix(drug_test_target, predict_result_3)
 class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
 f.write("The Confusion Matrix\n")
 cm1 = pd.DataFrame(cm, index=class_columns)
 f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
 f.write('\n')
 
-classification_report_3_1= classification_report(drug_test_target, predict_result_3_1, target_names=class_columns)
+classification_report_3 = classification_report(drug_test_target, predict_result_3, target_names=class_columns)
 f.write("Precision, recall, and F1-measure for each class\n")
-f.write(classification_report_3_1)
+f.write(classification_report_3)
 f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
 row_Index = ["accuracy", "macro F1", "weighted F1"]
-accuracy = str(accuracy_score(drug_test_target, predict_result_3_1))
-macro_f1 = str(f1_score(drug_test_target, predict_result_3_1, average='macro'))
-weighted_f1 = str(f1_score(drug_test_target, predict_result_3_1, average='weighted'))
+accuracy = str(accuracy_score(drug_test_target, predict_result_3))
+macro_f1 = str(f1_score(drug_test_target, predict_result_3, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_3, average='weighted'))
 displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
 f.write(tabulate(displayed_data, tablefmt="grid"))
-
-f.write("\n------------------- Top-DT {Entropy + Max Depth: [4] + Min Sample split: [2]}-------------------\n")
-# Experiment 2  Entropy + max_depth(4) + min_sample_split(2)
-tree_para_2 = {'criterion': ['entropy'], 'max_depth': [4], 'min_samples_split': [2]}
-clf3_2 = GridSearchCV(DecisionTreeClassifier(), tree_para_2)
-clf3_2.fit(X, y)
-# tree.plot_tree(clf3)
-predict_result_3_2 = clf3_2.predict(test_X)
-
-
-cm = confusion_matrix(drug_test_target, predict_result_3_1)
-class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
-f.write("The Confusion Matrix\n")
-cm1 = pd.DataFrame(cm, index=class_columns)
-f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
-f.write('\n')
-
-classification_report_3_2 = classification_report(drug_test_target, predict_result_3_2, target_names=class_columns)
-f.write("Precision, recall, and F1-measure for each class\n")
-f.write(classification_report_3_2)
-f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
-row_Index = ["accuracy", "macro F1", "weighted F1"]
-accuracy = str(accuracy_score(drug_test_target, predict_result_3_2))
-macro_f1 = str(f1_score(drug_test_target, predict_result_3_2, average='macro'))
-weighted_f1 = str(f1_score(drug_test_target, predict_result_3_2, average='weighted'))
-displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
-f.write(tabulate(displayed_data, tablefmt="grid"))
-
-f.write("\n------------------- Top-DT {Entropy + Max Depth: [4] + Min Sample split: [3]}-------------------\n")
-# Experiment 3  Entropy + max_depth(4) + min_sample_split(3)
-tree_para_3 = {'criterion': ['entropy'], 'max_depth': [4], 'min_samples_split': [3]}
-clf3_3 = GridSearchCV(DecisionTreeClassifier(), tree_para_3)
-clf3_3.fit(X, y)
-# tree.plot_tree(clf3)
-predict_result_3_3 = clf3_3.predict(test_X)
-
-
-cm = confusion_matrix(drug_test_target, predict_result_3_3)
-class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
-f.write("The Confusion Matrix\n")
-cm1 = pd.DataFrame(cm, index=class_columns)
-f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
-f.write('\n')
-
-classification_report_3_3 = classification_report(drug_test_target, predict_result_3_3, target_names=class_columns)
-f.write("Precision, recall, and F1-measure for each class\n")
-f.write(classification_report_3_3)
-f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
-row_Index = ["accuracy", "macro F1", "weighted F1"]
-accuracy = str(accuracy_score(drug_test_target, predict_result_3_3))
-macro_f1 = str(f1_score(drug_test_target, predict_result_3_3, average='macro'))
-weighted_f1 = str(f1_score(drug_test_target, predict_result_3_3, average='weighted'))
-displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
-f.write(tabulate(displayed_data, tablefmt="grid"))
-
-
-f.write("\n------------------- Top-DT {Entropy + Max Depth: [4] + Min Sample split: [4]}-------------------\n")
-# Experiment 4  Entropy + max_depth(4) + min_sample_split(4)
-tree_para_4 = {'criterion': ['entropy'], 'max_depth': [4], 'min_samples_split': [4]}
-clf3_4 = GridSearchCV(DecisionTreeClassifier(), tree_para_4)
-clf3_4.fit(X, y)
-# tree.plot_tree(clf3)
-predict_result_3_4 = clf3_4.predict(test_X)
-
-
-cm = confusion_matrix(drug_test_target, predict_result_3_4)
-class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
-f.write("The Confusion Matrix\n")
-cm1 = pd.DataFrame(cm, index=class_columns)
-f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
-f.write('\n')
-
-classification_report_3_4 = classification_report(drug_test_target, predict_result_3_4, target_names=class_columns)
-f.write("Precision, recall, and F1-measure for each class\n")
-f.write(classification_report_3_4)
-f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
-row_Index = ["accuracy", "macro F1", "weighted F1"]
-accuracy = str(accuracy_score(drug_test_target, predict_result_3_4))
-macro_f1 = str(f1_score(drug_test_target, predict_result_3_4, average='macro'))
-weighted_f1 = str(f1_score(drug_test_target, predict_result_3_4, average='weighted'))
-displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
-f.write(tabulate(displayed_data, tablefmt="grid"))
-
 
 # (d) PER: a Perceptron (linear model.Perceptron), with default parameter values
 f.write("\n(d) ---------------- Perceptron default values-------------------\n")
@@ -250,6 +177,7 @@ weighted_f1 = str(f1_score(drug_test_target, predict_result_4, average='weighted
 displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
 f.write(tabulate(displayed_data, tablefmt="grid"))
 
+
 # (e) Base-MLP: a Multi-Layered Perceptron (neural network.MLPClassifier) with 1 hidden layer of
 # 100 neurons, sigmoid/logistic as activation function, stochastic gradient descent, and default values
 # for the rest of the parameters.
@@ -258,7 +186,6 @@ clf5 = MLPClassifier(hidden_layer_sizes=(100), activation='logistic', solver='sg
 clf5.fit(X, y)
 predict_result_5 = clf5.predict(test_X)
 # predict_result_5 = clf5.predict(X)
-
 
 matrix_nb = confusion_matrix(drug_test_target, predict_result_5)
 # matrix_nb = confusion_matrix(y, predict_result_5)
@@ -287,6 +214,32 @@ f.write(tabulate(displayed_data, tablefmt="grid"))
 # (f) Top-MLP: a better performing Multi-Layered Perceptron found using grid search. For this, you need
 # to experiment with the following parameter values:
 f.write("\n(f) ---------------- Top-MLP default values-------------------\n")
+top_MLP_params = {'activation': ('sigmoid', 'tanh', 'relu', 'identity'),
+                  'hidden_layer_sizes':((30,50), (20,20,20)),
+                  'solver':('adam', 'sgd')}
+clf_6 = GridSearchCV(MLPClassifier(), top_MLP_params)
+clf_6.fit(X, y)
+predict_result_6 = clf_6.predict(test_X)
+f.write("Best parameter combination: \n")
+f.write(str(clf_6.best_params_) + '\n')
+
+cm = confusion_matrix(drug_test_target, predict_result_6)
+class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
+f.write("The Confusion Matrix\n")
+cm1 = pd.DataFrame(cm, index=class_columns)
+f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
+f.write('\n')
+
+classification_report_6 = classification_report(drug_test_target, predict_result_6, target_names=class_columns)
+f.write("Precision, recall, and F1-measure for each class\n")
+f.write(classification_report_6)
+f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
+row_Index = ["accuracy", "macro F1", "weighted F1"]
+accuracy = str(accuracy_score(drug_test_target, predict_result_6))
+macro_f1 = str(f1_score(drug_test_target, predict_result_6, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_6, average='weighted'))
+displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
+f.write(tabulate(displayed_data, tablefmt="grid"))
 
 
 #Close the file
