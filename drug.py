@@ -27,7 +27,7 @@ from tabulate import tabulate
 dataframe = pd.read_csv(r'inputData\Drug\drug200.csv')
 classname = cbook.get_sample_data(r'inputData\Drug\drug200.csv', asfileobj=False)
 
-# Plot the data of drug200.csv
+# Plot the data of drug200.csv(not done yet)
 plt.style.use('classic')
 
 # Convert all ordinal and nominal data to data in numeric format
@@ -42,7 +42,7 @@ drug_train, drug_test, drug_train_target, drug_test_target = train_test_split(da
 print(drug_train)
 print(drug_test)
 
-# Task2_6 Run 6 different classifier
+# Task2_6 Run 6 different classifiers
 f = open("drug-performance.txt", 'w')
 feature_columns = ['Age', 'Sex', 'BP', 'Cholesterol', 'Na_to_K']
 X = drug_train.loc[:, feature_columns]
@@ -56,20 +56,22 @@ class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
 f.write("(a) ---------------- GaussianNB default values-------------------\n")
 clf1 = GaussianNB()
 clf1.fit(X, y)
-predict_result = clf1.predict(test_X)
+predict_result_1 = clf1.predict(test_X)
 
-matrix_nb = confusion_matrix(drug_test_target, predict_result)
+matrix_nb = confusion_matrix(drug_test_target, predict_result_1)
 f.write("The Confusion Matrix\n")
 cm1 = pd.DataFrame(matrix_nb, index=class_columns)
 f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
 f.write('\n')
 
+classification_report_1 = classification_report(drug_test_target, predict_result_1, target_names=class_columns)
 f.write("Precision, recall, and F1-measure for each class\n")
+f.write(classification_report_1)
 f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
 row_Index = ["accuracy", "macro F1", "weighted F1"]
-accuracy = str(accuracy_score(drug_test_target, predict_result))
-macro_f1 = str(f1_score(drug_test_target, predict_result, average='macro'))
-weighted_f1 = str(f1_score(drug_test_target, predict_result, average='weighted'))
+accuracy = str(accuracy_score(drug_test_target, predict_result_1))
+macro_f1 = str(f1_score(drug_test_target, predict_result_1, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_1, average='weighted'))
 displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
 f.write(tabulate(displayed_data, tablefmt="grid"))
 
@@ -81,7 +83,40 @@ tree.plot_tree(clf2)
 predict_result_2 = clf2.predict(test_X)
 
 
-matrix_nb = confusion_matrix(drug_test_target, predict_result)
+matrix_nb = confusion_matrix(drug_test_target, predict_result_2)
+class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
+f.write("The Confusion Matrix\n")
+cm1 = pd.DataFrame(matrix_nb, index=class_columns)
+f.write(tabulate(cm1, class_columns, tablefmt="grid", stralign='center'))
+f.write('\n')
+
+classification_report_2= classification_report(drug_test_target, predict_result_2, target_names=class_columns)
+f.write("Precision, recall, and F1-measure for each class\n")
+f.write(classification_report_2)
+f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
+row_Index = ["accuracy", "macro F1", "weighted F1"]
+accuracy = str(accuracy_score(drug_test_target, predict_result_2))
+macro_f1 = str(f1_score(drug_test_target, predict_result_2, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_2, average='weighted'))
+displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
+f.write(tabulate(displayed_data, tablefmt="grid"))
+
+
+# (c) Top-DT: a better performing Decision Tree found using (GridSearchCV). The grid search will allow
+# you to find the best combination of hyper-parameters, as determined by the evaluation function that
+# you have determined in step (3) above. The hyper-parameters that you will experiment with are:
+f.write("\n(c) ---------------- Top-DT default values-------------------\n")
+# Experiment 1  Gini + max_depth(3) + min_sampple_split(2)
+
+
+# (d) PER: a Perceptron (linear model.Perceptron), with default parameter values
+f.write("\n(d) ---------------- Perceptron default values-------------------\n")
+clf4 = Perceptron()
+clf4.fit(X, y)
+predict_result_4 = clf4.predict(test_X)
+
+
+matrix_nb = confusion_matrix(drug_test_target, predict_result_4)
 class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
 f.write("The Confusion Matrix\n")
 cm1 = pd.DataFrame(matrix_nb, index=class_columns)
@@ -92,26 +127,43 @@ f.write('\n')
 f.write("Precision, recall, and F1-measure for each class\n")
 f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
 row_Index = ["accuracy", "macro F1", "weighted F1"]
-accuracy = str(accuracy_score(drug_test_target, predict_result))
-macro_f1 = str(f1_score(drug_test_target, predict_result, average='macro'))
-weighted_f1 = str(f1_score(drug_test_target, predict_result, average='weighted'))
+accuracy = str(accuracy_score(drug_test_target, predict_result_4))
+macro_f1 = str(f1_score(drug_test_target, predict_result_4, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_4, average='weighted'))
 displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
 f.write(tabulate(displayed_data, tablefmt="grid"))
-
-# Apply the classifier on the training data set and the testing data
-
-# (c) Top-DT: a better performing Decision Tree found using (GridSearchCV). The grid search will allow
-# you to find the best combination of hyper-parameters, as determined by the evaluation function that
-# you have determined in step (3) above. The hyper-parameters that you will experiment with are:
-
-# (d) PER: a Perceptron (linear model.Perceptron), with default parameter values
 
 # (e) Base-MLP: a Multi-Layered Perceptron (neural network.MLPClassifier) with 1 hidden layer of
 # 100 neurons, sigmoid/logistic as activation function, stochastic gradient descent, and default values
 # for the rest of the parameters.
+f.write("\n(e) ---------------- Base-MLP default values-------------------\n")
+clf5 = MLPClassifier(hidden_layer_sizes=(100,), activation='logistic', solver='sgd', max_iter=5000)
+clf5.fit(X, y)
+predict_result_5 = clf5.predict(test_X)
+
+
+matrix_nb = confusion_matrix(drug_test_target, predict_result_5)
+class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
+f.write("The Confusion Matrix\n")
+cm5 = pd.DataFrame(matrix_nb, index=class_columns)
+f.write(tabulate(cm5, class_columns, tablefmt="grid", stralign='center'))
+f.write('\n')
+
+
+f.write("Precision, recall, and F1-measure for each class\n")
+f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
+row_Index = ["accuracy", "macro F1", "weighted F1"]
+accuracy = str(accuracy_score(drug_test_target, predict_result_5))
+macro_f1 = str(f1_score(drug_test_target, predict_result_5, average='macro'))
+weighted_f1 = str(f1_score(drug_test_target, predict_result_5, average='weighted'))
+displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
+f.write(tabulate(displayed_data, tablefmt="grid"))
+
 
 # (f) Top-MLP: a better performing Multi-Layered Perceptron found using grid search. For this, you need
 # to experiment with the following parameter values:
+f.write("\n(f) ---------------- Top-MLP default values-------------------\n")
+
 
 #Close the file
 f.close()
