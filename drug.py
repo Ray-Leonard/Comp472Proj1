@@ -41,9 +41,8 @@ plt.bar(x, y, color="#FFCB6B", width=0.2)
 plt.savefig('Drug-distribution.pdf', dpi=320)
 
 # Convert all ordinal and nominal data to data in numeric format
-dataframe['Drug'].replace({'drugA': 1, 'drugB': 2, 'drugC': 3, 'drugX': 4, 'drugY': 5}, inplace=True)
-# dataframe['Drug'].replace({'drugA': 10, 'drugB': 26, 'drugC': 33, 'drugX': 24, 'drugY': 15}, inplace=True)
-
+# dataframe['Drug'].replace({'drugA': 1, 'drugB': 2, 'drugC': 3, 'drugX': 4, 'drugY': 5}, inplace=True)
+dataframe['Drug'].replace({'drugA': -2, 'drugB': -1, 'drugC': 0, 'drugX': 1, 'drugY': 2}, inplace=True)
 dataframe['Sex'].replace({'F': 0, 'M': 1}, inplace=True)
 dataframe['BP'].replace({'LOW': 1, 'NORMAL': 2, 'HIGH': 3}, inplace=True)
 dataframe['Cholesterol'].replace({'LOW': 1, 'NORMAL': 2, 'HIGH': 3}, inplace=True)
@@ -134,6 +133,8 @@ f.write('\n')
 
 
 f.write("Precision, recall, and F1-measure for each class\n")
+classification_report_4 = classification_report(drug_test_target, predict_result_4, target_names=class_columns)
+f.write(classification_report_4)
 f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
 row_Index = ["accuracy", "macro F1", "weighted F1"]
 accuracy = str(accuracy_score(drug_test_target, predict_result_4))
@@ -149,9 +150,12 @@ f.write("\n(e) ---------------- Base-MLP default values-------------------\n")
 clf5 = MLPClassifier(hidden_layer_sizes=(100), activation='logistic', solver='sgd', max_iter=5000)
 clf5.fit(X, y)
 predict_result_5 = clf5.predict(test_X)
+# predict_result_5 = clf5.predict(X)
 
 
 matrix_nb = confusion_matrix(drug_test_target, predict_result_5)
+# matrix_nb = confusion_matrix(y, predict_result_5)
+
 class_columns = ['drugA', 'drugB', 'drugC', 'drugX', 'drugY']
 f.write("The Confusion Matrix\n")
 cm5 = pd.DataFrame(matrix_nb, index=class_columns)
@@ -160,6 +164,10 @@ f.write('\n')
 
 
 f.write("Precision, recall, and F1-measure for each class\n")
+classification_report_5 = classification_report(drug_test_target, predict_result_5, target_names=class_columns)
+# classification_report_5 = classification_report(y, predict_result_5, target_names=class_columns)
+
+f.write(classification_report_5)
 f.write('\naccuracy, macro-average F1 and weighted-average F1\n')
 row_Index = ["accuracy", "macro F1", "weighted F1"]
 accuracy = str(accuracy_score(drug_test_target, predict_result_5))
