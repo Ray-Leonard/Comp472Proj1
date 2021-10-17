@@ -1,5 +1,4 @@
 import warnings
-
 import numpy as np
 import pandas as pd
 from sklearn.naive_bayes import GaussianNB
@@ -7,18 +6,8 @@ from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
 from sklearn.linear_model import Perceptron
 from sklearn.neural_network import MLPClassifier
-from sklearn.preprocessing import OrdinalEncoder
-from sklearn.preprocessing import LabelEncoder
-from sklearn import tree
-
 import matplotlib.pyplot as plt
-import matplotlib.cbook as cbook
-import math
-
-from sklearn.datasets import load_files
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.model_selection import train_test_split
-from sklearn.naive_bayes import MultinomialNB
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.metrics import accuracy_score
@@ -94,7 +83,6 @@ f.write(tabulate(displayed_data, tablefmt="grid"))
 f.write("\n(b) ---------------- Base-DT default values-------------------\n")
 clf2 = DecisionTreeClassifier()
 clf2.fit(X, y)
-tree.plot_tree(clf2)
 predict_result_2 = clf2.predict(test_X)
 
 
@@ -181,7 +169,9 @@ f.write(tabulate(displayed_data, tablefmt="grid"))
 # (e) Base-MLP: a Multi-Layered Perceptron (neural network.MLPClassifier) with 1 hidden layer of
 # 100 neurons, sigmoid/logistic as activation function, stochastic gradient descent, and default values
 # for the rest of the parameters.
-f.write("\n(e) ---------------- Base-MLP default values-------------------\n")
+f.write("\n(e) ---------------- Base-MLP-------------------\n")
+f.write("Hyperparameters:\n")
+f.write("hidden_layer_sizes=(100), activation='logistic', solver='sgd', max_iter=5000\n")
 clf5 = MLPClassifier(hidden_layer_sizes=(100), activation='logistic', solver='sgd', max_iter=5000)
 clf5.fit(X, y)
 predict_result_5 = clf5.predict(test_X)
@@ -240,6 +230,90 @@ macro_f1 = str(f1_score(drug_test_target, predict_result_6, average='macro'))
 weighted_f1 = str(f1_score(drug_test_target, predict_result_6, average='weighted'))
 displayed_data = pd.DataFrame([accuracy, macro_f1, weighted_f1], row_Index)
 f.write(tabulate(displayed_data, tablefmt="grid"))
+
+# 8 - redo 6, 10 times.
+# for each model:
+# average accuracy
+# average macro-average F1
+# average weighted-average F1
+# standard deviation for accuracy
+# standard deviation for macro F1
+# standard deviation for weighted F1
+
+# array with shape(10, 6), each row is one iteration, each column is a record for a model
+accuracy = []
+macro_f1 = []
+weighted_f1 = []
+for i in range(10):
+    # creating new models
+    clf_1 = GaussianNB()
+    clf_2 = DecisionTreeClassifier()
+    top_DT_param = {'criterion': ('entropy', 'gini'),
+                'max_depth': (5, 10), 'min_samples_split': (2, 4, 6)}
+    clf_3 = GridSearchCV(DecisionTreeClassifier(), top_DT_param)
+    clf_4 = Perceptron()
+    clf_5 = MLPClassifier()
+    top_MLP_params = {'activation': ('sigmoid', 'tanh', 'relu', 'identity'),
+                      'hidden_layer_sizes': ((30, 50), (20, 20, 20)),
+                      'solver': ('adam', 'sgd')}
+    clf_6 = GridSearchCV(MLPClassifier(), top_MLP_params)
+
+    # training new models
+    clf_1.fit(X,y)
+    clf_2.fit(X, y)
+    clf_3.fit(X, y)
+    clf_4.fit(X, y)
+    clf_5.fit(X, y)
+    clf_6.fit(X, y)
+
+    # testing the models
+    p_result_1 = clf_1.predict(test_X)
+    p_result_2 = clf_2.predict(test_X)
+    p_result_3 = clf_3.predict(test_X)
+    p_result_4 = clf_4.predict(test_X)
+    p_result_5 = clf_5.predict(test_X)
+    p_result_6 = clf_6.predict(test_X)
+
+    # recording scores
+    # accuracy
+    accuracy_temp = []
+    accuracy_temp.append(accuracy_score(drug_test_target, p_result_1))
+    accuracy_temp.append(accuracy_score(drug_test_target, p_result_2))
+    accuracy_temp.append(accuracy_score(drug_test_target, p_result_3))
+    accuracy_temp.append(accuracy_score(drug_test_target, p_result_4))
+    accuracy_temp.append(accuracy_score(drug_test_target, p_result_5))
+    accuracy_temp.append(accuracy_score(drug_test_target, p_result_6))
+    accuracy.append(accuracy_temp)
+    # macro F1
+    macro_temp = []
+    macro_temp.append(f1_score(drug_test_target, p_result_1, average='macro'))
+    macro_temp.append(f1_score(drug_test_target, p_result_2, average='macro'))
+    macro_temp.append(f1_score(drug_test_target, p_result_3, average='macro'))
+    macro_temp.append(f1_score(drug_test_target, p_result_4, average='macro'))
+    macro_temp.append(f1_score(drug_test_target, p_result_5, average='macro'))
+    macro_temp.append(f1_score(drug_test_target, p_result_6, average='macro'))
+    macro_f1.append(macro_temp)
+    # weighted F1
+    weighted_temp = []
+    weighted_temp.append(f1_score(drug_test_target, p_result_1, average='weighted'))
+    weighted_temp.append(f1_score(drug_test_target, p_result_2, average='weighted'))
+    weighted_temp.append(f1_score(drug_test_target, p_result_3, average='weighted'))
+    weighted_temp.append(f1_score(drug_test_target, p_result_4, average='weighted'))
+    weighted_temp.append(f1_score(drug_test_target, p_result_5, average='weighted'))
+    weighted_temp.append(f1_score(drug_test_target, p_result_6, average='weighted'))
+    weighted_f1.append(weighted_temp)
+
+# calculate the average and stddev
+accuracy = np.array(accuracy)
+macro_f1 = np.array(macro_f1)
+weighted_f1 = np.array(weighted_f1)
+
+print(np.mean(accuracy, axis=0))
+print(np.mean(macro_f1, axis=0))
+print(np.mean(weighted_f1, axis=0))
+print(np.std(accuracy, axis=0))
+print(np.std(macro_f1, axis=0))
+print(np.std(weighted_f1, axis=0))
 
 
 #Close the file
