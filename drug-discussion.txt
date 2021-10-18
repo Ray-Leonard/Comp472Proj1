@@ -1,0 +1,24 @@
+1. Unbalanced Classes
+When we were dealing with MLP, our team members discussed the accuracy caused by the amount of neuron layer. However, in the end, we realized that the accuracy that was paid too much attention to in part1 is not useful in part2.
+From the distribution of classes generated in step (3), the distribution of classes is uneven, with at least nearly half of them distributed in drug_Y and most of the drugs account for less than 10% of the overall. Therefore, not all classes are equally important in this task. "Recall," "precision," and "F-measure" become especially useful when one class is more important than another.
+
+2. Overall performance of classifiers
+GaussianNB(F1 = 80-90%), Base-Dt(F1= 95%+), and Top-DT(F1 = 95%+) all have overwhelmingly higher performance than perceptron(F1: 40-50%), and MLP(Base-MLP: F1 = 50-60%; Top-MLP: F1 = 60-75%) do.
+As illustrated, perceptron predict the test set most poorly. This might be because the data set is not linearly separable enough. It means a straight line could not separate sufficiently different classes.
+Also, even if the data set is non-linearly separable, the MLP classifiers which are capable of handling non-linearly separable data set might over-fit the data so that they both perform poorly on the training and testing set. (F1<80%).
+Significantly, Base-DT models both most precisely estimate the drug type given randomly split test data among all the models. Changes in hyper-parameters of DT(to set different Max_depth, and Min_samples_split from those default values) seem to affect the result little.
+However, the MLP model is sensitive to changes in its hyper-parameters(algorithm choices or the number of hidden layers results in significantly different predictions).
+It is assumed that increasing the number of hidden layers can improve the precision and reduce errors in fitting the train set, but two hidden layers with 30 and 50 neurons is chosen instead of three hidden layers with 20, 20, and 20 neurons through GridSearchCV.
+It is reasonable to conclude that three hidden layers make MLP more complex, but they somehow contribute to over-fitting, being discarded by GridSearchCV. Changing the solver from sgd to adams and the activation function from sigmoid to tanh function.
+With the same iterations(200 by default), ‘tanh’ and ‘adams’ would yield  higher performance(accuracy, macro, and weighted f1) than ‘sigmoid’ and ‘sgd’ does because ‘tanh’ and ‘adams’ update weights adaptively (weights converge faster).  Overall, these changes could uplift the F1 measure by 10-20%.
+Hence, it is needed for MLP to be set with appropriate hyper-parameters or learning structures for a decent outcome while DT is good at fitting the data set regardless of what hyper-parameters are chosen.
+
+3. Varying performance of MLP classifiers(non-linear classifiers)
+This might be because MLP classifiers with hidden layers use a non-convex function in which there exists more than one local minimum.
+It means different random weight initialization might lead to different validation accuracy. Randomness could avoid searching a decent set of weights is stuck in a limited space.
+
+4. Fixed performance of GaussianNB, Base-DT, Top-DT, and Perceptron(Linear classifiers)
+No random initializations on variables are introduced into these classifiers for predicting the test data, which results in their performance being fixed given the same train and test data set.
+ a) GaussianNB: prior and cond prob are fixed for the same train set. Only the order in which drawing the data from each label is various.
+ b) Base-DT and Top-DT: distribute nodes(features) into the tree orderly according to   their scores of either gini or entropy algorithm. The scores are unchanged if the test data keep the same.
+ c) Perceptron: Unlike MLP, there exists no random initialization on weights. The search area and bound are pre-defined by default. In other words, weights are associated with classes. If parameters of weights are not given, all classes are supposed to have weight one.
